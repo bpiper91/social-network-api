@@ -1,4 +1,4 @@
-const { User } = require('../models/User');
+const { User } = require('../models');
 
 const userController = {
     // get all users
@@ -23,16 +23,14 @@ const userController = {
     getOneUser({ params }, res) {
         User.findOne({ _id: params.id })
             // add thoughts and friends to retrieved data
-            .populate(
-                {
+            .populate({
                     path: 'thoughts',
                     select: '-__v'
-                },
-                {
+                })
+            .populate({
                     path: 'friends',
                     select: '-__v'
-                }
-            )
+                })
             .select('-__v')
             .then(userData => {
                 // if no user is found, send 404 error
@@ -136,3 +134,5 @@ const userController = {
             .catch(err => res.json(err));
     }
 };
+
+module.exports = userController;
