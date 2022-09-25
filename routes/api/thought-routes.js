@@ -34,7 +34,7 @@ router.route('/:id/reactions')
     // stored in single thought's reactions array
     
 //   /api/thoughts/ID/reactions/ID
-router.route('/:id/reactions/:id')
+router.route('/:thoughtId/reactions/:reactionId')
     .delete(removeReaction)
 
 module.exports = router;

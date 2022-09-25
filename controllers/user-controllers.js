@@ -35,6 +35,7 @@ const userController = {
             )
             .select('-__v')
             .then(userData => {
+                // if no user is found, send 404 error
                 if (!userData) {
                     res.status(404).json({ message: 'No user found with this ID.'});
                     return;
@@ -68,6 +69,7 @@ const userController = {
                 runValidators: true
             })
             .then(userData => {
+                // if no user is found, send 404 error
                 if (!userData) {
                     res.status(404).json({ message: 'No user found with this ID.'});
                     return;
@@ -88,6 +90,7 @@ const userController = {
             { new: true }
         )
             .then(userData => {
+                // if no user is found, send 404 error
                 if (!userData) {
                     res.status(404).json({ message: 'No user found with this ID.'});
                     return;
@@ -98,17 +101,26 @@ const userController = {
     },
 
     // remove a user by id
-    // BONUS remove user's associated thoughts on deletion
     removeUser({ params }, res) {
         User.findOneAndDelete({ _id: params.id })
             .then(userData => {
+                // if no user is found, send 404 error
                 if (!userData) {
                     res.status(404).json({ message: 'No user found with this ID.'});
                     return;
                 };
-                res.json(userData);
+                // remove any thoughts associated with the user (bonus functionality)
+                return Thought.deleteMany({ username: userData.username });
             })
-            .catch(err => res.status(400).json(err));
+            .then(({ deletedCount }) => {
+                if (!deletedCount) {
+                    res.json({ message: 'User deleted.' });
+                    return;
+                };
+                // if any associated thoughts were deleted, send delete count
+                res.json({ message: `User deleted. Associated thoughts deleted: ${deletedCount}.` });
+            })
+            .catch(err => res.json(err));
     },
 
     // remove a friend by user and friend id
