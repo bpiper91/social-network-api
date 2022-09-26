@@ -39,15 +39,22 @@ const thoughtController = {
     // expects { "thoughtText": "THOUGHT", "username": "USERNAME", "userId": "USERID" }
     createThought({ body }, res) {
         Thought.create(body)
-            .then(({ _id, userId }) => {
+            .then((thoughtData) => {
+                // // convert new ObjectId to string for query
+                // idString = thoughtData._id.toString();
+
                 // push created thought's id to associated user's thoughts array
                 return User.findOneAndUpdate(
-                    { _id: userId },
-                    { $push: { thoughts: _id } },
+                    // select user with ID userId
+                    { _id: thoughtData.userId.toString() },
+                    // add thoughtId to user's thoughts array
+                    { $push: { thoughts: thoughtData._id.toString() } },
                     { new: true }
                 );
             })
             .then(userData => {
+                console.log("userData:");
+                console.log(userData);
                 // if no user is found, send a 404 error
                 if (!userData) {
                     res.status(404).json({ message: 'No user found with this ID.' });
@@ -99,22 +106,22 @@ const thoughtController = {
     removeThought({ params }, res) {
         Thought.findOneAndDelete({ _id: params.id })
             .then((deletedThought) => {
+                console.log("deletedThought:")
+                console.log(deletedThought)
                 // if no thought found, send 404 error
-                if (!deletedThought._id) {
+                if (!deletedThought) {
                     res.status(404).json({ message: 'No thought found with this ID.' });
                     return;
-                } else if (deletedThought._id && !deletedThought.userId) {
-                    // if thought found with no associated user id, simply delete thought
-                    res.json(deletedThought)
                 };
                 // remove deleted thought's id from associated user's thoughts array
                 return User.findOneAndUpdate(
                     { _id: deletedThought.userId },
-                    { $pull: { thoughts: deletedThought._id } },
+                    { $pull: { thoughts: params.id } },
                     { new: true }
                 );
             })
             .then(updatedUserData => {
+                console.log(updatedUserData)
                 // if no user found, send message
                 if (!updatedUserData) {
                     res.json({ message: 'Thought deleted. No associated user found.' });
@@ -123,7 +130,7 @@ const thoughtController = {
                 // respond with updated user and message indicating thought has been deleted
                 res.json({ body: updatedUserData, message: 'Thought deleted. Associated user updated.' });
             })
-            .catch(err => res.status(400).json(err));
+            .catch(err => res.json(err));
     },
 
     // remove a reaction by thought and reaction id

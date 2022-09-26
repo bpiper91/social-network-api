@@ -21,6 +21,12 @@ const ReactionSchema = new Schema(
             default: Date.now,
             get: createdDate => moment(createdDate).format('MMM D, YYYY | h:mm a')
         }
+    },
+    {
+        toJSON: {
+            getters: true,
+        },
+        id: false
     }
 );
 
@@ -39,6 +45,12 @@ const ThoughtSchema = new Schema(
         username: {
             type: String,
             required: 'Username is required.'
+        },
+        userId: {
+            // type: String,
+            // required: 'User ID is required.'
+            type: Schema.Types.ObjectId,
+            ref: 'User'
         },
         reactions: [ ReactionSchema ]
     },

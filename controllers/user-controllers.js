@@ -124,10 +124,11 @@ const userController = {
     // remove a friend by user and friend id
     // expects params userId and friendId
     removeFriend({ params }, res) {
+        console.log(params)
         User.findOneAndUpdate(
             { _id: params.userId },
             // removes friend with friendId from user with userId
-            { $pull: { friends: { _id: params.friendId } }},
+            { $pull: { friends: params.friendId } },
             { new: true }
         )
             .then(userData => res.json(userData))
