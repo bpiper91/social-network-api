@@ -1,4 +1,4 @@
-const { Thought } = require('../models');
+const { Thought, User } = require('../models');
 
 const thoughtController = {
     // get all thoughts
@@ -40,15 +40,17 @@ const thoughtController = {
     createThought({ body }, res) {
         Thought.create(body)
             .then((thoughtData) => {
-                // // convert new ObjectId to string for query
-                // idString = thoughtData._id.toString();
+                console.log(thoughtData);
+                // // convert new ObjectIds to strings for query
+                const userIdString = thoughtData.userId.toString();
+                const thoughtIdString = thoughtData._id.toString();
 
                 // push created thought's id to associated user's thoughts array
                 return User.findOneAndUpdate(
                     // select user with ID userId
-                    { _id: thoughtData.userId.toString() },
+                    { _id: userIdString },
                     // add thoughtId to user's thoughts array
-                    { $push: { thoughts: thoughtData._id.toString() } },
+                    { $push: { thoughts: thoughtIdString } },
                     { new: true }
                 );
             })
