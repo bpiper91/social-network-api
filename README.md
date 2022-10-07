@@ -6,9 +6,9 @@ I was asked to build a social media API that could be integrated into a website 
 
 ## Usage
 
-[This walkthrough video shows the API in use.](https://) (add video later)
+[This walkthrough video shows the API in use.](https://drive.google.com/file/d/1SHfoiaCH33y5bLji6b4mXDTMFOaXaRRb/view?usp=sharing)
 
-To invoke the application, (add instructions once finalized)
+To invoke the application, clone the repo and run `npm i` to install the node dependencies. Then, run `node server` to start the server and enable the API routes.
 
 The basic structure of the social media platform consists of users and thoughts. Users can sign up for the platform and add/remove other users as friends. Users can post thoughts, as well as reactions to thoughts. Once posted, thoughts can be edited or removed, while reactions can only be removed.
 
@@ -19,8 +19,6 @@ The basic structure of the social media platform consists of users and thoughts.
 **Get All Users** - GET /api/users
 
 **Create a User** - POST /api/users
-
-- API request body should be formatted:
 
 **Get One User** - GET /api/users/userId
 
@@ -38,8 +36,6 @@ The basic structure of the social media platform consists of users and thoughts.
 
 **Create a Thought** - POST /api/thoughts
 
-- API request body should be formatted:
-
 **Get One Thought** - GET /api/thoughts/thoughtId
 
 **Edit a Thought** - PUT /api/thoughts/thoughtId
@@ -47,8 +43,6 @@ The basic structure of the social media platform consists of users and thoughts.
 **Remove a Thought** - DELETE /api/thoughts/thoughtId
 
 **Create a Reaction** - POST /api/thoughts/thoughtId/reactions
-
-- API request body should be formatted:
 
 **Remove a Reaction** - DELETE /api/thoughts/thoughtId/reactions/reactionId
 
